@@ -20,12 +20,12 @@ def _encode(loc):
 
 def encode(lat, lon):
     ''' encode takes a longitude and a latitude and using the algorithm
-    described in the README(Todo) creates a 4 character unicode string '''
+    described in the README creates a 4 character unicode string '''
     first, second = _encode(lat)
     third, fourth = _encode(lon)
-    return first, second, third, fourth
+    return u"\u2641", first, second, third, fourth
 
-def _decode(first, second, scale):
+def _decode(first, second):
     first = "%x%x" % (ord(first), ord(second))
     val = int(first, 16)
     loc = 1
@@ -35,13 +35,17 @@ def _decode(first, second, scale):
     if val > 1000000000:
         val = int(str(val)[1:])
     if increase:
-        loc = (val / scale + 90) * loc
+        loc = (val / 10000000.0 + 90) * loc
     else:
-        loc = val / scale * loc
+        loc = val / 10000000.0 * loc
     return loc
 
 def decode(code):
+    ''' decode takes a code according to the talon specifications and returns
+    the latitude and longitude it represents. '''
+    if code[0] != u"\u2641":
+        raise OverflowError
     first, second, third, fourth = code
-    lat = _decode(first, second, 10000000.0)
-    lon = _decode(third, fourth, 10000000.0)
+    lat = _decode(first, second)
+    lon = _decode(third, fourth)
     return lat, lon
