@@ -45,7 +45,7 @@ def decode(code):
     the latitude and longitude it represents. '''
     if code[0] != u"\u2641":
         raise OverflowError
-    first, second, third, fourth = code
+    first, second, third, fourth = code[1:]
     lat = _decode(first, second)
     lon = _decode(third, fourth)
     return lat, lon
