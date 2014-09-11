@@ -18,6 +18,5 @@ function encode(loc) {
 	val = val.toString(16)
 	first = String.fromCharCode(parseInt(val.substring(0, 4), 16))
 	second = String.fromCharCode(parseInt(val.substring(4), 16))
-	console.log(val.substring(4))
 	return first + second
 }
