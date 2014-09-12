@@ -1,5 +1,50 @@
 <head>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="js/talon.js"></script>
+    <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd1awIlzqSWUk8mAXj2BhCc6qn_dvjxlM">
+	</script>
+	<script type="text/javascript">
+		var map
+		var marker
+		var latlng = new google.maps.LatLng(43.7866457, -79.1894173)
+		function initialize() {
+			document.getElementById("talon-tag").value = (encode(43.7866457, -79.1894173))
+			var mapOptions = {
+				center: latlng,
+				zoom: 16
+			};
+			map = new
+				google.maps.Map(document.getElementById('map-canvas'),
+						mapOptions);
+			marker = new google.maps.Marker({
+				position: latlng,
+				draggable: true,
+				map: map,
+				title: "Talon Tag",
+				animation: google.maps.Animation.DROP,
+			});
+			map.setCenter(marker.getPosition());
+			google.maps.event.addListener(marker, 'mouseup', function() {
+				var position = marker.getPosition()
+				map.panTo(position);
+				document.getElementById("talon-tag").value = (encode(position.k, position.B))
+			});
+		}
+
+		function update(){
+			pos = decode(document.getElementById("talon-tag").value)
+			pos = new google.maps.LatLng(pos[0], pos[1])
+			marker.setPosition(pos)
+			map.panTo(pos);
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
 </head
 <body>
+	<div id="map-canvas"></div>	
+	<div style="left: 50%; position: absolute;">
+		<input type="text" id="talon-tag" onchange="update()">
+	</div>
 </body>
