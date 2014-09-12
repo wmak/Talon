@@ -7,8 +7,8 @@
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd1awIlzqSWUk8mAXj2BhCc6qn_dvjxlM">
 	</script>
 	<script type="text/javascript">
-		var initial =
-decodeURI(decodeURI(decodeURI(escape(encodeURI(window.location.search.substr(1))))))
+		var initial = window.location.search.substr(1) || "%25E2%2599%2581%25E9%2585%258E%25EE%258F%2599%25E2%25BC%25B3%25E5%25A2%259D"
+		initial = decodeURI(decodeURI(decodeURI(decodeURI(escape(encodeURI(initial))))))
 		var map
 		var marker
 		var latlng = new google.maps.LatLng(43.7866457, -79.1894173)
@@ -33,6 +33,7 @@ decodeURI(decodeURI(decodeURI(escape(encodeURI(window.location.search.substr(1))
 				var position = marker.getPosition()
 				map.panTo(position);
 				document.getElementById("talon-tag").value = (encode(position.k, position.B))
+				window.history.pushState("object or string", "Title", "?" +	(encode(position.k, position.B)));
 			});
 			console.log(initial)
 			pos = decode(initial)
