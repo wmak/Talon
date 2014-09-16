@@ -23,7 +23,7 @@ def encode(lat, lon):
     described in the README creates a 4 character unicode string '''
     first, second = _encode(lat)
     third, fourth = _encode(lon)
-    return u"\u2641", first, second, third, fourth
+    return first, second, third, fourth
 
 def _decode(first, second):
     first = "%x%x" % (ord(first), ord(second))
@@ -43,9 +43,7 @@ def _decode(first, second):
 def decode(code):
     ''' decode takes a code according to the talon specifications and returns
     the latitude and longitude it represents. '''
-    if code[0] != u"\u2641":
-        raise OverflowError
-    first, second, third, fourth = code[1:]
+    first, second, third, fourth = code
     lat = _decode(first, second)
     lon = _decode(third, fourth)
     return lat, lon
