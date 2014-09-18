@@ -12,8 +12,12 @@
 		var map
 		var marker
 		var latlng = new google.maps.LatLng(43.7866457, -79.1894173)
+		function current_url() {
+			return location.protocol + '//' + location.host + location.pathname
+				+ "?"
+		}
 		function initialize() {
-			document.getElementById("talon-tag").value = (encode(43.7866457, -79.1894173))
+			document.getElementById("talon-tag").value = current_url() + (encode(43.7866457, -79.1894173))
 			var mapOptions = {
 				center: latlng,
 				zoom: 16
@@ -31,7 +35,7 @@
 			google.maps.event.addListener(marker, 'mouseup', function() {
 				var position = marker.getPosition()
 				map.panTo(position);
-				document.getElementById("talon-tag").value = (encode(position.k, position.B))
+				document.getElementById("talon-tag").value = current_url() + (encode(position.k, position.B))
 				window.history.pushState("object or string", "Title", "?" +	(encode(position.k, position.B)));
 			});
 			pos = decode(initial)
@@ -39,16 +43,7 @@
 				pos = new google.maps.LatLng(pos[0], pos[1])
 				marker.setPosition(pos)
 				map.panTo(pos);
-				document.getElementById("talon-tag").value = (initial)
-			}
-		}
-
-		function update(){
-			pos = decode(document.getElementById("talon-tag").value)
-			if (pos != -1) {
-				pos = new google.maps.LatLng(pos[0], pos[1])
-				marker.setPosition(pos)
-				map.panTo(pos);
+				document.getElementById("talon-tag").value = current_url() + (initial)
 			}
 		}
 
@@ -68,6 +63,6 @@
 <body>
 	<div id="map-canvas"></div>	
 	<div style="left: 50%; position: absolute;">
-		<input type="text" id="talon-tag" onchange="update()">
+		<input type="text" id="talon-tag">
 	</div>
 </body>
