@@ -1,1 +1,0 @@
-/home/wmak/go/src/talon
