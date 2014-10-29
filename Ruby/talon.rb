@@ -11,11 +11,11 @@ def _encode(loc)
       loc += 90
     end
   else
-  	val = 2000000000
-  	if loc > 90
-  	  val = 3000000000
-  	  loc -= 90
-  	end
+    val = 2000000000
+    if loc > 90
+      val = 3000000000
+      loc -= 90
+    end
   end
 
   val += (loc.abs * 10000000).to_i
@@ -39,31 +39,27 @@ def _decode(loc)
   neg = 1
 
   if val < 2000000000
-  	neg = -1
+    neg = -1
   end
 
   if val.to_s[0] == "1" or val.to_s[0] == "3"
-  	increase = true
+    increase = true
   end
   
   if val > 1000000000
-  	val = val.to_s[1..-1].to_i
+    val = val.to_s[1..-1].to_i
   end
 
   val = val / 10000000.0
 
   if increase
-  	val += 90
+    val += 90
   end
 
   return val
 end
 
 def decode(code)
-  if code[0] != "\u2641"
-  	return -1
-  end
-
   lat = _decode(code[1,2])
   lon = _decode(code[3,4])
 
@@ -71,4 +67,4 @@ def decode(code)
 end
 
 # puts encode(41.25, -120.9762)
-puts decode("♁迋퐠丑懐")
+# puts decode("♁迋퐠丑懐")
