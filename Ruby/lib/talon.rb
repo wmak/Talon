@@ -1,67 +1,42 @@
-def unichr(code_point)
-  [code_point].pack("U")
+#!/usr/bin/env ruby
+
+def encode(lat, long)
+  [lat, long]
+    .map { |x| format('%08x', _encode(x)).scan(/.{4}/) }
+    .map { |x| x.map { |y| [y.to_i(16)].pack 'U' } }
+    .join
+end
+
+def decode(str)
+  str.scan(/.{2}/)
+      .map { |x| format('%04x%04x', x[0].ord, x[1].ord).to_i(16) }
+      .map { |x| _decode(x) }
 end
 
 def _encode(loc)
-  val = 0
-  if loc < 0
-    val = 0
-    if loc < -90
-      val = 1000000000
-      loc += 90
-    end
-  else
-    val = 2000000000
-    if loc > 90
-      val = 3000000000
-      loc -= 90
-    end
+  location = loc.abs
+
+  encoding = loc >= 0 ? 2_000_000_000 : 0
+
+  if location > 90
+    encoding += 1_000_000_000
+    location -= 90
   end
 
-  val += (loc.abs * 10000000).to_i
-  val = val.to_s(16)
-  first = unichr(val[0,4].to_i(16))
-  second = unichr(val[4..-1].to_i(16))
-
-  return first + second
+  encoding + (location * 10_000_000).to_i
 end
 
-def encode(lat, lon)
-  return "\u2641" +  _encode(lat) + _encode(lon)
-end
+def _decode(enc)
+  encoding = enc # so that the function remains non-destructive
 
-def _decode(loc)
-  loc0 = loc[0].ord
-  loc1 = loc[1].ord
+  positive = encoding >= 2_000_000_000
+  encoding -= 2_000_000_000 if positive
 
-  first = loc0.to_s(16) + loc1.to_s(16)
-  val = first.to_i(16)
-  neg = 1
+  over_90 = encoding >= 1_000_000_000
+  encoding -= 1_000_000_000 if over_90
 
-  if val < 2000000000
-    neg = -1
-  end
+  location = over_90 ? 90 : 0
+  location += encoding / 10_000_000.0
 
-  if val.to_s[0] == "1" or val.to_s[0] == "3"
-    increase = true
-  end
-  
-  if val > 1000000000
-    val = val.to_s[1..-1].to_i
-  end
-
-  val = val / 10000000.0
-
-  if increase
-    val += 90
-  end
-
-  return val
-end
-
-def decode(code)
-  lat = _decode(code[1,2])
-  lon = _decode(code[3,4])
-
-  return [lat, lon]
+  location * (positive ? 1 : -1)
 end
