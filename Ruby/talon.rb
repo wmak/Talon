@@ -65,6 +65,3 @@ def decode(code)
 
   return [lat, lon]
 end
-
-# puts encode(41.25, -120.9762)
-# puts decode("♁迋퐠丑懐")
